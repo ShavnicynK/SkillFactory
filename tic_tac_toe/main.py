@@ -27,6 +27,7 @@ def is_occupied(board_r, board_c):
         return board[board_r][board_c] == "-"
 
 
+#Выделение цветом
 def set_color(text):
     text = "\033[32m{}\033[37m".format(text)
     return text
