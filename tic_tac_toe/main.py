@@ -33,24 +33,38 @@ def set_color(text):
     return text
 
 
+#Проверяем на наличие выигрышной комбинации учитывая последний символ
 def is_win(board_c, board_r):
     opt_1 = board[board_r - 1]
     opt_2 = [board[0][board_c - 1], board[1][board_c - 1], board[2][board_c - 1]]
     opt_3 = [board[0][0], board[1][1], board[2][2]]
     opt_4 = [board[0][2], board[1][1], board[2][0]]
+    #последний символ установлен в угловую ячейку (3 возможных выигрышных комбинации)
     if (board_r, board_c) in [(1, 1), (1, 3), (3, 1), (3, 3)]:
         return opt_1.count(marker[step % 2]) == 3 or opt_2.count(marker[step % 2]) == 3 \
             or opt_3.count(marker[step % 2]) == 3
+    #последний символ установлен в среднюю ячейку крайних строк/столбцов (2 возможных выигрышных комбинации)
     elif (board_r, board_c) in [(2, 1), (2, 3), (1, 2), (3, 2)]:
         return opt_1.count(marker[step % 2]) == 3 or opt_2.count(marker[step % 2]) == 3
+    #последний символ установлен в центр игрового поля (4 возможных выигрышных комбинации)
     elif (board_r, board_c) in [(2, 2)]:
         return opt_1.count(marker[step % 2]) == 3 or opt_2.count(marker[step % 2]) == 3 \
             or opt_3.count(marker[step % 2]) == 3 or opt_4.count(marker[step % 2]) == 3
 
 
+#Работа с игровым полем
 def board_print(board_c=0, board_r=0):
     board_pr: str = ""
-    if board_c > 0 and board_r == 0:
+    #Игровое поле с выделенными столбцами для их выбора
+    if board_c == 0 and board_r == 0:
+        board_pr += set_color("1  2  3\n")
+        for board_r in board:
+            for elem in board_r:
+                board_pr += elem + "  "
+            board_pr += "\n"
+        return board_pr
+    #Игровое поле с выделенным столбцом для выбора ячейки
+    elif board_c > 0 and board_r == 0:
         for board_r in range(len(board)):
             board_pr += set_color(board_r + 1) + " "
             for elem in range(len(board[board_r])):
@@ -58,15 +72,10 @@ def board_print(board_c=0, board_r=0):
                     else board[board_r][elem] + "  "
             board_pr += "\n"
         return board_pr
+    #Добавление маркера на игровое поле
     elif board_c > 0 and board_r > 0:
         board[board_r - 1][board_c - 1] = marker[step % 2]
-    elif board_c == 0 and board_r == 0:
-        board_pr += set_color("1  2  3\n")
-        for board_r in board:
-            for elem in board_r:
-                board_pr += elem + "  "
-            board_pr += "\n"
-        return board_pr
+    #Формирование игрового поля без дополнительных элементов
     elif board_c == 10 and board_r == 10:
         for board_r in board:
             for elem in board_r:
@@ -75,8 +84,12 @@ def board_print(board_c=0, board_r=0):
         return board_pr
 
 
+###Инициализация переменных
+#Формируем список игроков
 players = [input_player_name("первого"), input_player_name("второго")]
+#Формируем привязку маркеров к игрокам
 marker = ["X", "O"]
+#Формируем игровое поле
 board = [["-" for a in range(3)] for b in range(3)]
 step = 0
 
@@ -84,11 +97,14 @@ while step <= 8:
     print("-" * 30, "\n")
     print(f"Ход игрока {set_color(players[step % 2])}", f"(ставим - {marker[step % 2]})\n")
     print(board_print())
+    #Запрашиваем номер столбца
     board_col = input_cr("столбца")
     print("\n")
     print(board_print(board_col, 0))
+    # Запрашиваем номер строки
     board_row = input_cr("строки", board_col)
     board_print(board_col, board_row)
+    #После пятого хода начинаем проверть возможность победы
     if step >= 4 and is_win(board_col, board_row):
         print(f"{set_color(players[step % 2])} выиграл!")
         print(board_print(10, 10))
