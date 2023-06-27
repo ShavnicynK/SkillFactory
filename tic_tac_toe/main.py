@@ -76,7 +76,7 @@ def board_print(board_c=0, board_r=0):
     elif board_c > 0 and board_r > 0:
         board[board_r - 1][board_c - 1] = marker[step % 2]
     #Формирование игрового поля без дополнительных элементов
-    elif board_c == 10 and board_r == 10:
+    elif board_c == -1 and board_r == -1:
         for board_r in board:
             for elem in board_r:
                 board_pr += elem + "  "
@@ -107,11 +107,11 @@ while step <= 8:
     #После пятого хода начинаем проверть возможность победы
     if step >= 4 and is_win(board_col, board_row):
         print(f"{set_color(players[step % 2])} выиграл!")
-        print(board_print(10, 10))
+        print(board_print(-1, -1))
         break
     if step == 8 and not is_win(board_col, board_row):
         print(set_color("\nНичья!"))
-        print(board_print(10, 10))
+        print(board_print(-1, -1))
     step += 1
 
 
