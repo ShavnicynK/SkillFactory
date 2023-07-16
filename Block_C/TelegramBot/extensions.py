@@ -33,6 +33,7 @@ class CryptoConverter:
 
         return total_base
 
+    #получаем список валют из файла
     @staticmethod
     def get_values():
         try:
@@ -43,21 +44,22 @@ class CryptoConverter:
 
         return keys
 
+    #добавляем новые валюты для конвертации
     @staticmethod
     def add_values(name: str, ticker: str, keys: dict):
         if name in list(keys.keys()):
             raise ConvertionException(f'Валюта {name} уже доступна к конвертации')
         if ticker in list(keys.values()):
             raise ConvertionException(f'Тикер {ticker} уже используется')
-
+        #проверяем существует ли валюта с указанным тикером(не уверен что данный запрос оптимален, но другой в api не нашел)
         r = requests.get(f'https://data-api.cryptocompare.com/asset/v1/data/by/symbol?asset_symbol={ticker}')
-        temp = json.loads(r.content)
-        if len(temp['Err']) > 0:
+        result = json.loads(r.content)
+        if len(result['Err']) > 0:
             raise ConvertionException(f'Валюты с тикером {ticker} не существует')
         else:
             try:
-                keys[name] = ticker
+                keys[name] = ticker  #добавляем валюту в словарь
                 with open('values.txt', 'wb') as file:
-                    pickle.dump(keys, file)
+                    pickle.dump(keys, file)  #обновляем содержимое файла с валютами
             except FileNotFoundError:
                 raise ConvertionException("Ошибка добавления в список валют")
