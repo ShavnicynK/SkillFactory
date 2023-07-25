@@ -1,0 +1,122 @@
+1. Создать двух пользователей (с помощью метода User.objects.create_user('username')).
+- User.objects.create_user('bunin') 
+- User.objects.create_user('pushkin') 
+
+2. Создать два объекта модели Author, связанные с пользователями.
+from news.models import Author
+Author.objects.create(user_id = 1) 
+Author.objects.create(user_id = 2) 
+
+3. Добавить 4 категории в модель Category.
+- from news.models import Category
+- Category.objects.create(name='Спорт') 
+- Category.objects.create(name='Политика') 
+- Category.objects.create(name='Экономика') 
+- Category.objects.create(name='Бизнес') 
+
+4. Добавить 2 статьи и 1 новость.
+- from news.models import Post
+- Post.objects.create(author_id = 1, type = 'A', name = 'Lorem', content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.') 
+- Post.objects.create(author_id = 1, type = 'A', name = 'Ipsum', content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.')
+- Post.objects.create(author_id = 2, name = 'Ut enim', content = 'Ut enim adminim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in eprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.')
+
+5. Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий).
+- from news.models import PostCategory
+- PostCategory.objects.create(category_id = 1, post_id = 1) 
+- PostCategory.objects.create(category_id = 2, post_id = 1) 
+- PostCategory.objects.create(category_id = 2, post_id = 2)
+- PostCategory.objects.create(category_id = 3, post_id = 2)
+- PostCategory.objects.create(category_id = 4, post_id = 3)
+
+6. Создать как минимум 4 комментария к разным объектам модели Post (в каждом объекте должен быть как минимум один комментарий).
+- from news.models import Comments
+- Comments.objects.create(post_id = 1, user_id = 1, content = 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.') 
+- Comments.objects.create(post_id = 1, user_id = 2, content = 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.') 
+- Comments.objects.create(post_id = 2, user_id = 1, content = 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.') 
+- Comments.objects.create(post_id = 3, user_id = 1, content = 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.') 
+- Comments.objects.create(post_id = 3, user_id = 2, content = 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.') 
+
+7. Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов.
+- post_1 = Post.objects.get(id = 1)
+- post_2 = Post.objects.get(id = 2)
+- post_3 = Post.objects.get(id = 3)
+- post_1.like()
+- post_1.like()
+- post_1.like()
+- post_1.like()
+- post_1.like()
+- post_1.like()
+- post_1.dislike()
+- post_1.dislike()
+- post_2.like()
+- post_2.like()
+- post_2.like()
+- post_2.dislike()
+- post_2.dislike()
+- post_2.like()
+- post_3.like()
+- post_3.like()
+- post_3.like()
+- post_3.like()
+- post_3.like()
+- post_3.like()
+- post_3.like()
+- post_3.like()
+- post_3.dislike()
+- post_3.dislike()
+- comment_1 = Comments.objects.get(id = 1)
+- comment_2 = Comments.objects.get(id = 2)
+- comment_3 = Comments.objects.get(id = 3)
+- comment_4 = Comments.objects.get(id = 4)
+- comment_5 = Comments.objects.get(id = 5)
+- comment_1.like()
+- comment_1.like()
+- comment_1.like()
+- comment_1.like()
+- comment_1.like()
+- comment_1.dislike()
+- comment_2.like()
+- comment_2.like()
+- comment_2.dislike()
+- comment_2.like()
+- comment_3.like()
+- comment_3.like()
+- comment_3.like()
+- comment_3.like()
+- comment_3.like()
+- comment_3.like()
+- comment_3.like()
+- comment_3.dislike()
+- comment_3.dislike()
+- comment_4.like()
+- comment_4.like()
+- comment_4.like()
+- comment_5.like()
+- comment_5.like()
+- comment_5.dislike()
+- comment_5.dislike()
+
+
+8. Обновить рейтинги пользователей.
+- author_1 = Author.objects.get(id = 1)
+- author_1.update_rating() 
+- author_2 = Author.objects.get(id = 2)
+- author_2.update_rating() 
+
+9. Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+- User.objects.order_by('-author__rating').values('username', 'author__rating')[0]  
+
+10. Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
+- post = Post.objects.order_by('-rating').values('id', 'date', 'rating', 'name', 'author_id')[0]  
+- post['date'] = post['date'].strftime("%d-%m-%y"))
+- post['intro'] = Post.objects.get(id=post['id']).preview() 
+- post['username'] = User.objects.get(id=post['author_id']).username 
+
+11. Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+- Comments.objects.select_related('User').filter(post=post['id']).values('date', 'user__username', 'rating', 'content') 
+
+
+
+
+
+
