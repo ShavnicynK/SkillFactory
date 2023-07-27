@@ -10,6 +10,15 @@ Post
 <p style="text-align:right">{{ post.date|date:"d M Y" }}</p>
 <hr>
 <p style="text-align:left">{{ post.content|censor }}</p>
+<p style="text-align:right">
+    {% if post.type == 'N' %}
+        <a href="/news/{{ post.id }}/edit/">Редактировать</a> |
+        <a href="/news/{{ post.id }}/delete/">Удалить</a>
+    {% elif post.type == 'A' %}
+        <a href="/articles/{{ post.id }}/edit/">Редактировать</a> |
+        <a href="/articles/{{ post.id }}/delete/">Удалить</a>
+    {% endif %}
+</p>
 <hr>
 <p style="text-align:center"><a href="/news/">Все новости</a></p>
 {% endblock content %}

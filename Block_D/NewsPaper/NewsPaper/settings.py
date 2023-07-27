@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'news',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'NewsPaper.urls'
 
-SITE_ID = 1
+SITE_ID = 5
 
 TEMPLATES = [
     {

@@ -1,22 +1,30 @@
 from django.db import models
 from django.db.models import Sum
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.user.username}'
+
     def update_rating(self):
-        rate_posts = Post.objects.filter(author_id = self.id).aggregate(Sum('rating'))
-        rate_comments = Comments.objects.filter(user_id = self.id).aggregate(Sum('rating'))
-        rate_posts_comments = Comments.objects.filter(post__author_id = self.id).aggregate(Sum('rating'))
+        rate_posts = Post.objects.filter(author_id=self.id).aggregate(Sum('rating'))
+        rate_comments = Comments.objects.filter(user_id=self.id).aggregate(Sum('rating'))
+        rate_posts_comments = Comments.objects.filter(post__author_id=self.id).aggregate(Sum('rating'))
 
         self.rating = rate_posts['rating__sum'] * 3 + rate_comments['rating__sum'] + rate_posts_comments['rating__sum']
         self.save()
 
+
 class Category(models.Model):
     name = models.CharField(max_length=120, unique=True)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Post(models.Model):
@@ -37,6 +45,9 @@ class Post(models.Model):
     public = models.BooleanField(default=True)
 
     categorys = models.ManyToManyField(Category, through='PostCategory')
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 
     def like(self):
         self.rating += 1
