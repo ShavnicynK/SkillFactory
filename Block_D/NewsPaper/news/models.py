@@ -23,8 +23,13 @@ class Author(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=120, unique=True)
 
+    subscribers = models.ManyToManyField(User, through='CategorySubscribers')
+
     def __str__(self):
         return f'{self.name}'
+
+    def get_absolute_url(self):
+        return reverse('category_list')
 
 
 class Post(models.Model):
@@ -66,6 +71,11 @@ class PostCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
+class CategorySubscribers(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+
 class Comments(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -80,3 +90,5 @@ class Comments(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
+

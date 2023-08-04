@@ -1,14 +1,21 @@
 {% extends "basetpl/default.html" %}
 
 {% block content %}
-<h2>Страница авторизованного пользователя {{request.user.username}}</h2>
-{% if is_not_author %}
-<br><br>
-<button><a href="/upgrade/">Стать автором</a></button>
-{% else %}
-<br><br>
-<h3>Вы уже автор</h3>
-{% endif %}
-<br><br>
-<button> <a href="/accounts/logout/">Выйти</a> </button>
+    <h2>Страница авторизованного пользователя {{request.user.username}}</h2>
+        {% if is_not_author %}
+            <br><br>
+            <button><a href="/upgrade/">Стать автором</a></button>
+        {% else %}
+            <br><br>
+            <h3>Вы уже автор</h3>
+        {% endif %}
+        <br><br>
+        {% if categorys %}
+            <h3>Вы подписаны на:</h3>
+            {% for category in categorys %}
+                <p><a href="/categorys/{{ category.id }}">{{ category.name }}</a></p>
+            {% endfor %}
+        {% endif %}
+        <br><br>
+    <button> <a href="/accounts/logout/">Выйти</a> </button>
 {% endblock %}

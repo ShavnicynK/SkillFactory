@@ -2,6 +2,7 @@ from allauth.account.forms import SignupForm
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
+from news.models import Category
 
 
 class AccountView(LoginRequiredMixin, TemplateView):
@@ -10,6 +11,8 @@ class AccountView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+        context['categorys'] = Category.objects.filter(categorysubscribers__user_id=self.request.user.id).values('id', 'name')
+
         return context
 
 

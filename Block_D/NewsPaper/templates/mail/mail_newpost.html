@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Новый материал "{{ post.name }}" в категории "{{ cat_name }}"</h2>
+    <p>Здравствуй, {{ username }}. Новая статья в твоём любимом разделе!</p>
+    <p>"{{ post.content|truncatechars:50 }}"</p>
+    <p><a href="{{ link }}">Перейти к материалу</a></p>
+</body>
+</html>

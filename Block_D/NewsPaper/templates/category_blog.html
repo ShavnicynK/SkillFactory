@@ -1,0 +1,36 @@
+{% extends 'basetpl/default.html' %}
+{% load custom_filters %}
+{% load custom_tags %}
+
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+    <h1>Блог категории "{{ category.name }}"</h1>
+    {% if is_subscribe and not is_anonym %}
+        <p style="text-align:right;color:green;">
+            Вы подписаны на обновления
+        </p>
+    {% elif is_anonym %}
+        <p style="text-align:right;">
+            Авторизуйтесь чтобы подписатья
+        </p>
+    {% else %}
+        <p style="text-align:right;">
+            <a href="/categorys/{{ category.id }}/subscribe/">Подписаться</a>
+        </p>
+    {% endif %}
+    <hr>
+    {% if posts %}
+        {% for post in posts %}
+            <div>
+                <h2>{{ post.name }}</h2>
+                <p>{{ post.content }}</p>
+            </div>
+       {% endfor %}
+    {% else %}
+        <h2>Материалов в данной категории еще нет</h2>
+    {% endif %}
+
+{% endblock content %}
