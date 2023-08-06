@@ -54,7 +54,7 @@ class PostCreate(PermissionRequiredMixin, CreateView):
         limit_time = timezone.now() - timedelta(days=1)
         count_post = Post.objects.filter(author_id=author.id, date__gte=limit_time).count()
 
-        if count_post <= 3:
+        if count_post <= 5:
             post = form.save(commit=False)
             path = self.request.path
             post.author_id = Author.objects.filter(user_id=self.request.user.id).values('id')

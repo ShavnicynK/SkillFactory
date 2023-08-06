@@ -57,7 +57,9 @@ class Command(BaseCommand):
 
         scheduler.add_job(
             weekly_send_posts,
-            trigger=CronTrigger(second="*/10"),
+            trigger=CronTrigger(
+                day_of_week="mon", hour="00", minute="00"
+            ),
             id="weekly_send_posts",
             max_instances=1,
             replace_existing=True,
